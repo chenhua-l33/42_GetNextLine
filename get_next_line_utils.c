@@ -6,64 +6,79 @@
 /*   By: chenhli <chenhli@learner.42.tech>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/18 12:38:01 by chenhli           #+#    #+#             */
-/*   Updated: 2026/11/18 20:12:28 by chenhli          ###   ########.fr       */
+/*   Updated: 2026/11/22 21:05:25 by chenhli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <unistd.h>
-#include <fcntl.h>
 
-int	bytes_in_next_line(int fd)
+size_t	ft_strlen(const char *s)
 {
-	char	c;
-	int		total_chars;
-	int		byte_read;
+	size_t	i;
 
-	c = 0;
-	total_chars = 0;
-	byte_read = -1;
-	if (fd == -1)
-		return (-1);
-	while (byte_read)
+	i = 0;
+	while (s[i])
+		++i;
+	return (i);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	fin_len;
+
+	unsigned int (i) = 0;
+	size_t (s_len) = ft_strlen(s);
+	if (start >= s_len)
+		return (ft_calloc(1, 1));
+	if (start + len > s_len)
+		fin_len = s_len - start;
+	else
+		fin_len = len;
+	sub = malloc((fin_len + 1) * sizeof(char));
+	if (!sub)
+		return (NULL);
+	while (i < fin_len)
+		sub[i++] = s[start++];
+	sub[i] = 0;
+	return (sub);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*res;
+
+	size_t (i) = 0;
+	size_t (s1_len) = ft_strlen(s1);
+	size_t (s2_len) = ft_strlen(s2);
+	size_t (res_len) = s1_len + s2_len;
+	res = malloc((res_len + 1) * sizeof(char));
+	if (!res)
+		return (NULL);
+	while (i < s1_len)
 	{
-		byte_read = read(fd, &c , 1);
-		write(1, &c, 1);
-		total_chars += byte_read;
+		res[i] = s1[i];
+		++i;
 	}
-	return (total_chars);
+	while (i < res_len)
+	{
+		res[i] = s2[i - s1_len];
+		++i;
+	}
+	res[i] = 0;
+	return (res);
 }
 
-// int	bytes_in_next_line(int fd)
-// {
-// 	char	c;
-// 	int		total_chars;
-// 	int		byte_read;
-
-// 	c = 0;
-// 	total_chars = 0;
-// 	byte_read = -1;
-// 	if (fd == -1)
-// 		return (-1);
-// 	while (byte_read)
-// 	{
-// 		byte_read = read(fd, &c , 1);
-// 		write(1, &c, 1);
-// 		total_chars += byte_read;
-// 		if (c == '\n' || c == EOF)
-// 			break ;
-// 	}
-// 	return (total_chars);
-// }
-
-int main(void)
+ssize_t	check_newline_exist(char *s, size_t len)
 {
-	int fd = open("file.txt", O_RDONLY);
-	bytes_in_next_line(fd);	
-	// char c;
-	// read(fd, &c , 1);
-	// write(1, &c, 1);
-	 close(fd);
+	ssize_t	i;
+
+	i = 0;
+	while (i < len)
+	{
+		if (str[i] == '\n')
+			return (i);
+		++i;
+	}
+	return (-1);
 }
-
-
